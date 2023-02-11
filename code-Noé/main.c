@@ -93,7 +93,7 @@ int main(int argc, char *argv[]){
         //printf("%lf\n",norme);
         cpt++;
     }while(norme>EPSILON);
-    printf("Nn itération : %d\n",cpt);
+    printf("Nb itération : %d\n",cpt);
     //aff_vec(nb_sommets, newX);
     exit(0);
 }
