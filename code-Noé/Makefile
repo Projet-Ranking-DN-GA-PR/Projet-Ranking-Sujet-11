@@ -4,7 +4,7 @@ OBJS = main.o lire_stocker.o
 
 .PHONY: run
 run: main
-	./main graphe8sommets.txt
+	./main wb-cs-stanford.txt
 	
 main: $(OBJS)
 	$(CC) -o $@ $(OBJS)

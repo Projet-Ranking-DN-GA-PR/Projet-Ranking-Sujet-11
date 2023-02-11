@@ -70,19 +70,22 @@ int main(int argc, char *argv[]){
         for(int i=0;i<nb_sommets;i++){
             if(f[i]==1){
                 s+=x[i]*f[i];
+                
             }
         }
+        //if(cpt <= 1){printf("\n scalaire s : %.15lf\n",s);}
         s1=(s*alpha+(1-alpha))/nb_sommets;
         for(int i=0;i<nb_sommets;i++){
             A = &Tsommets[i];
             inter = 0;
             while(A!=NULL){
                 inter += A->weight*x[A->pred-1];
+                printf("  poid : %lf  ;",A->weight);
                 A = A->suiv;
             }
             newX[i] = alpha*inter+s1;
         }
-        //aff_vec(nb_sommets);
+        
         for(int i=0;i<nb_sommets;i++){
             if((newX[i]-x[i])>0){
                 c = newX[i]-x[i];}
@@ -90,9 +93,16 @@ int main(int argc, char *argv[]){
         norme+=c;
         x[i] = newX[i];
         }
+        //aff_vec(nb_sommets, newX);
+        double sumvec = 0.0;
+        for (int i = 0 ; i < nb_sommets ; i++){
+            sumvec+=x[i];
+
+        }
+        //printf("somme vec x : %lf\n",sumvec);
         //printf("%lf\n",norme);
         cpt++;
-    }while(norme>EPSILON);
+    }while(cpt < 1);
     printf("Nn itération : %d\n",cpt);
     //aff_vec(nb_sommets, newX);
     exit(0);

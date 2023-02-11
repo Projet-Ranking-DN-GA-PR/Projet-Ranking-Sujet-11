@@ -116,10 +116,10 @@ void stocker_ligne(FILE *f, ARC *S[], double vecteurf[]){
 
   //initialise le vecteur f en fonction des degré des sommets
   if (deg == 0){
-    vecteurf[ligne] = 1;
+    vecteurf[ligne-1] = 1;
   }
   else{
-    vecteurf[ligne] = 0;
+    vecteurf[ligne-1] = 0;
   }
   
 
@@ -134,23 +134,17 @@ void stocker_ligne(FILE *f, ARC *S[], double vecteurf[]){
 
 void affichage_ArcsEntrants(int indice, ARC *S[]){
 
-
-  int numeroarc = indice;
   int i = 1;
   ARC *a;
+
+  a=S[indice-1];
+
+  printf("\nSommet numéro : %d\n",indice);
   
-  if(S[numeroarc - 1] == NULL || S[numeroarc - 1]->pere == 0){
-      printf("sommets %d n'a pas d'arcs entrant",indice);
-    }
-  else{
-    a = S[numeroarc - 1];
-    printf("\n\n arc numero %d : \n\n pere : %d\nfils : %d\n poid : %f\n",i, a->pere, numeroarc, a->poid);
-  }
-  
-  while(a->suivant != NULL){
-    i++;
+  while(a != NULL){
+    printf(" arc numero %d =>  pere : %d ; poid : %.15lf\n",i, a->pere, a->poid);
     a=a->suivant;
-    printf("\n\n arc numero %d : \n\n pere : %d\nfils : %d\n poid : %f\n",i, a->pere, numeroarc, a->poid);
+    i++;
   }
   
 }

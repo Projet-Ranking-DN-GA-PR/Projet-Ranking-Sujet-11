@@ -12,29 +12,14 @@ void produit_vecteur_matrice(double x[], ARC *S[], int nbsom, double res[]) {
   for (int i = 0; i < nbsom; i++) {
 
     ARC *a;
-    double som = 0;
+    a = S[i]; //récupére le 1er sommet de la liste chainée de la colonne i
 
-    if(S[i] == NULL || S[i]->pere == 0){
-
-      //printf("\n\nsommets %d n'a pas d'arcs entrant\n\n",i);
-     
+    double som = 0.0;
       
-    }
-
-    else{
-
-      a = S[i];
-      double prod = x[a->pere-1] * a->poid;
-      som = som + prod;
-      //printf("\n\n facteur x : %f poid : %f pere : %d fils : %d\n",x[a->pere-1], a->poid, a->pere, i);
-
-      while(a->suivant != NULL){
+    while(a != NULL){ //cette boucle calcul le produit du vecteur avec la colonne i de la matrice et l'écrit dans la colonne i du vecteur résultat
       
+      som = som + (x[a->pere-1] * a->poid);
       a=a->suivant;
-      prod = x[a->pere-1] * a->poid;
-      som = som + prod;
-
-      }
 
     }
 
@@ -68,11 +53,11 @@ double diff_norme(int taille_x, double x[], double nx[]){
 
   for(int i = 0; i<taille_x; i++){
 
-    double diff = 0;
+    double diff = 0.0;
     diff = nx[i] - x[i];
 
     if( diff < 0){
-      diff = -diff;
+      diff = (-1) * diff;
     }
 
     res = res + diff;
@@ -89,11 +74,13 @@ Fonction qui calcul le scalaire de x*f-transposé
 */
 double scalaire_s(int taille_vec, double x[], double ftrans[]){
 
-  double res = 0;
+  double res = 0.0;
 
   for(int i = 0; i<taille_vec; i++){
 
-    res = res + x[i] * ftrans[i];
+    if(ftrans[i] == 1){
+      res = res + (x[i] * ftrans[i]);
+    }
 
   }
 
@@ -103,30 +90,22 @@ double scalaire_s(int taille_vec, double x[], double ftrans[]){
 
 /**
 efectue le calcul suivant :
-nx = alpha * x*P + alpha*s*s*e/N + (1-alpha)*e/N
+nx = alpha * x*P + alpha*s*e/N + (1-alpha)*e/N avec x vecteur résultat à l'étape k et nx vecteur résultat à l'étape k+1
 */
 void calcul(double alpha, int N, double x[], double s, double nx[], ARC *S[]){
 
+  double sprime = 0.0;
 
-  //calcul s' tq s' = (s*alpha)/N
-  // puis s' = s' + (1-alpha)/N
-  double sprime = 0;
+  sprime = (s*alpha+(1-alpha))/N; //calcul s' à partir de s 
 
-  sprime = (s*alpha)/N;
-  sprime = sprime + (1-alpha)/N ;
+  double produit[N];  
 
+  produit_vecteur_matrice(x, S, N, produit);  //produit = x*P (P est ici S : matrice d'adjacence du graphe).
 
-  //produit = x*P
-  double produit[N];
+  for (int i = 0; i < N; i++) {
 
-  produit_vecteur_matrice(x, S, N, produit);
-
-  //calcul nx = alpha*x*P + sprime
-  for (int i = 0; i<N; i++){
-
-    nx[i] = alpha * produit[i] + sprime;
+    nx[i] = (alpha * produit[i]) + sprime; //fait la dernière étape du calcul avec la précision Google, i.e : ajout du surfer aléatoire (rend la matrice irréductible).
 
   }
-
 
 }

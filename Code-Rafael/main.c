@@ -17,10 +17,8 @@ int main(int argc, char *argv[]) {
   FILE *f;
   f = fopen(argv[1], "r");
 
-
-  // nbsom = nombre de sommet | nbarc = nombre d'arc
-  int nbsom = 0;
-  int nbarc = 0;
+  int nbsom = 0;  //nombre de sommet
+  int nbarc = 0;  //nombre d'arc
 
   nbsom = nb_sommet(argc, argv, f);
   nbarc = nb_arc(argc, argv, f);
@@ -47,11 +45,10 @@ int main(int argc, char *argv[]) {
 
   }
 
-
-  //lis le fichier ligne par ligne, une ligne par sommet
+  
   for (int i = 0; i < nbsom; i++) {
 
-    stocker_ligne(f, Sommets, vecteurf);
+    stocker_ligne(f, Sommets, vecteurf); //lis le fichier ligne par ligne, une ligne par sommet
   }
 
   //affiche_vecteur(nbsom, vecteurf);
@@ -63,21 +60,15 @@ int main(int argc, char *argv[]) {
   printf("durée : ");
   affiche_time(clock_start);  
   
-  //affiche le résultat du stockage en liste chainée 
+  
   /*for (int i = 0; i < nbsom; i++) {
-    affichage_ArcsEntrants(i + 1, Sommets);
+    affichage_ArcsEntrants(i + 1, Sommets); //affiche le résultat du stockage en liste chainée 
   }*/
 
 
 /***************DEBUT DU CALCUL**************************/
 
   clock_t clock_calc = clock();
-
-  //vecteur x :
-
-  //double x[] = {0.1,0.1,0.2,0,0.1,0.15,0.15,0.2};
-  //double x[] = {0.125,0.125,0.125,0.125,0.125,0.125,0.125,0.125};
-
 
   //double x[nbsom];
   double *x;
@@ -87,9 +78,9 @@ int main(int argc, char *argv[]) {
       printf("\n\nPB malloc\n\n");
       exit(2);
     }
+
   
   //double nx[nbsom];
-
   double *nx;
   nx = malloc((nbsom) * sizeof(double));
     
@@ -98,22 +89,19 @@ int main(int argc, char *argv[]) {
       exit(2);
     }
 
-  //initialise les vecteurs e et x à 1/N pour toutes les valeurs, et fait pareil pour nx.
+  
   for(int i = 0 ; i<nbsom ; i++){
     
-    x[i] = 1.0/nbsom;
+    x[i] = 1.0/nbsom; //initialise les vecteurs x et nx à 1/N pour toutes les valeurs.
     nx[i] = x[i];
 
   }
 
-
-  //diffnorme = cf fontion 'diff_norme' dans calcul.c | compteur = nb itération de algo des puissance
-
-  double diffnorme = 1;
-  int compteur = 1;
+  double diffnorme = 1.0; // diff entre étape k et étape k+1, indique si on a converger ou non.
+  int compteur = 0; //nb d'itération de l'algo des puissance avant convergence.
 
 
-  //algo des puissance et/ou avec la précision de Google, jusq'à atteindre epsilon (convergence)
+  //algo des puissance avec/sans la précision de Google, jusq'à atteindre epsilon (convergence).
 
   printf("\n\n\n----------Calcul de convergence de la Matrice en cours----------\n\n\n");
 
@@ -122,25 +110,23 @@ int main(int argc, char *argv[]) {
   
 
   while ( diffnorme > EPSILON ){
+    
+    diffnorme = 0.0;
 
-  //calcul du scalaire s tq : s = x*f-transposé
-  double s = 0;
-  s = scalaire_s(nbsom, x, vecteurf);
+    //produit_vecteur_matrice(x, Sommets, nbsom, nx); //calcul du produit sans la précision Google.
 
-  //calcul principale cf calcul.c
+    double s = 0.0;
+    s = scalaire_s(nbsom, x, vecteurf); //scalaire s servant dans la précision Google.
 
-  //produit_vecteur_matrice(x, Sommets, nbsom, nx);
-  calcul(alpha, nbsom, x, s, nx, Sommets);
+    calcul(alpha, nbsom, x, s, nx, Sommets);   //calcul principale avec la précision Google.
 
-  //affiche_vecteur(nbsom, nx);
+    //affiche_vecteur(nbsom, nx); //affiche le vecteur résultat
 
-  //calcul la norme de la différence en valeur absolu de nx - x
-  diffnorme = diff_norme(nbsom, x, nx);
-  //printf("\n\nvaleur norme : %.12lf",diffnorme);
+    
+    diffnorme = diff_norme(nbsom, x, nx); //calcul la norme de la différence en valeur absolu de nx - x
+    //printf("\n\nvaleur norme : %.12lf",diffnorme);
 
-  //printf("\n diff norme : %.9lf\n",diffnorme);
-  compteur++;
-
+    compteur++;
   }
   
   printf("\n\n\nCalcul de convergence de la Matrice terminé\n\n");
@@ -153,8 +139,7 @@ int main(int argc, char *argv[]) {
   printf("\n\ndurée totale du programme : ");
   affiche_time(clock_start);
 
-  //affiche le résultat après convergence 
-  //affiche_vecteur(nbsom, nx);
+  //affiche_vecteur(nbsom, nx); //affiche le résultat après convergence 
 
   return 0;
 }
