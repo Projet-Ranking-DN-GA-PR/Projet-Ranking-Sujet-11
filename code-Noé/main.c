@@ -102,8 +102,8 @@ int main(int argc, char *argv[]){
         //printf("somme vec x : %lf\n",sumvec);
         //printf("%lf\n",norme);
         cpt++;
-    }while(cpt < 1);
-    printf("Nn itération : %d\n",cpt);
+    }while(norme>EPSILON);
+    printf("Nb itération : %d\n",cpt);
     //aff_vec(nb_sommets, newX);
     exit(0);
 }

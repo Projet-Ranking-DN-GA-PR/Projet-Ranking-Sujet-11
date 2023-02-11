@@ -22,7 +22,7 @@ void remplir(ARC *Tsommets, int som_pred, int som_suc, double weight){
 
 void stocker(FILE *F, int nb_sommets, int nb_arcs, ARC *Tsommets, double* f){
     for(int i =0; i<nb_sommets;i++){
-        ARC init = {0,0,NULL};
+        ARC init = {-1,0,NULL};
         Tsommets[i]=init;
     }
     
