@@ -4,7 +4,11 @@ OBJS = main.o lire_stocker.o
 
 .PHONY: run
 run: main
-	./main wb-cs-stanford.txt
+<<<<<<< HEAD
+	./main graphe_a_8_sommet 
+=======
+	./main ../wb-cs-stanford.txt
+>>>>>>> d6a04c629a0ad3073d3778a5f9172ad97e6aa8a0
 	
 main: $(OBJS)
 	$(CC) -o $@ $(OBJS)

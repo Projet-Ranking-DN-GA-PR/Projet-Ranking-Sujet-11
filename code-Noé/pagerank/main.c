@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include "lire_stocker.h"
 
-double EPSILON = 0.00000001;
-double alpha = 0.85;
+//double EPSILON = 0.00000001;
+//double alpha = 0.85;
 
 //Affichage
 void aff_vec(int nb_sommets, double newX[]){
@@ -18,6 +18,9 @@ void aff_vec(int nb_sommets, double newX[]){
 //Main
 int main(int argc, char *argv[]){
 
+    float EPSILON; //= atof(argv[3]);
+    float alpha; //= atof(argv[2]);
+    float tab_alp[] = {0.5 , 0.7, 0.85, 0.9, 0.99};
     int nb_sommets;
     int nb_arcs;
 
@@ -39,8 +42,8 @@ int main(int argc, char *argv[]){
     f = (double*)malloc(nb_sommets * sizeof(double));
     stocker(F,nb_sommets,nb_arcs, Tsommets, f);
     fclose(F);
-    printf("nb_sommets: %d\n",nb_sommets);
-    printf("nb_arcs: %d\n",nb_arcs);
+    //printf("nb_sommets: %d\n",nb_sommets);
+    //printf("nb_arcs: %d\n",nb_arcs);
     //aff_Tab_ARC(Tsommets,nb_sommets);
     
     
@@ -48,8 +51,17 @@ int main(int argc, char *argv[]){
 
     //double x[] = {0.1,0.1,0.2,0,0.1,0.15,0.15,0.2};
     //double newX[] = {0.1,0.1,0.2,0,0.1,0.15,0.15,0.2};
-    double x[nb_sommets];
-    double newX[nb_sommets];
+
+    for(int p = 4; p<5; p++){
+    EPSILON = 0.000001;
+    for(int m = 0; m<1 ; m++){
+        EPSILON = EPSILON/10;
+        alpha = tab_alp[p];
+
+    double *x;
+    x = (double*)malloc(nb_sommets*sizeof(double));
+    double *newX;
+    newX = (double*)malloc(nb_sommets*sizeof(double));
 
     for(int j=0;j<nb_sommets;j++){
         x[j] = 1.0/nb_sommets;
@@ -80,7 +92,7 @@ int main(int argc, char *argv[]){
             inter = 0;
             while(A!=NULL){
                 inter += A->weight*x[A->pred-1];
-                printf("  poid : %lf  ;",A->weight);
+                //printf("  poid : %lf  ;",A->weight);
                 A = A->suiv;
             }
             newX[i] = alpha*inter+s1;
@@ -103,7 +115,11 @@ int main(int argc, char *argv[]){
         //printf("%lf\n",norme);
         cpt++;
     }while(norme>EPSILON);
-    printf("Nb itération : %d\n",cpt);
+    printf("Nb itération : %d, alpha : %.4f, epsilon : %.2e\n",cpt,alpha,EPSILON);
     //aff_vec(nb_sommets, newX);
+    free(x);
+    free(newX);
+    }
+    }
     exit(0);
 }
