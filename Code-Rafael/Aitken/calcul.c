@@ -61,7 +61,7 @@ double diff_norme(int taille_x, double x[], double nx[]){
     }
 
     res = res + diff;
-    x[i] = nx[i];
+    //x[i] = nx[i];
 
   }
   //printf("\n norme : %lf",res);
@@ -114,34 +114,31 @@ void calcul(double alpha, int N, double x[], double nx[], ARC *S[], double f[]){
 
 }
 
-void Aitken( int N, double xk[], double xk1[], double xk2[], double res[]){
-
-  double *g;
-  g = malloc((N) * sizeof(double));
-    
-    if (g == NULL) {
-      printf("\n\nPB malloc\n\n");
-      exit(2);
-    }
-
-  double *h;
-  h = malloc((N) * sizeof(double));
-    
-    if (h == NULL) {
-      printf("\n\nPB malloc\n\n");
-      exit(2);
-    }
+void Aitken( int N, double xk[], double xk1[], double xk2[]){
 
   for (int i = 0; i<N ; i++){
+    
+    double g;
+    double h;
 
-    g[i] = (xk1[i] - xk[i])*(xk1[i] - xk[i]);
-    h[i] = xk2[i] - 2*xk1[i] + xk[i];
+    g = (xk1[i] - xk[i])*(xk1[i] - xk[i]);
+    h = xk2[i] - 2*xk1[i] + xk[i];
 
-    res[i] = xk2[i] - (g[i]/h[i]);
+    if(h != 0 /*&& xk2[i] < (g/h)*/) {xk2[i] = xk2[i] - (g/h);
+    //printf("\nFLAG valeur xk2 : %lf",xk2[i]);
+    }
 
-    if(res[i] < 0){res[i] = -res[i];}
+    //xk2[i] = xk2[i] - (g/h);
 
+    //if(xk2[i] < 0){xk2[i] = 0;}
+    
   }
+
+  /*for(int i = 0; i<N; i++){
+    if(xk2[i] < 0){xk2[i] = -xk2[i];}
+  }*/
+
+  testNorme(xk2, N);
 
 }
 
@@ -150,21 +147,9 @@ void calculAitken(double alpha, int N, double x[], double xk1[], double xk2[], A
 
   calcul(alpha, N, xk1, xk2, S, f);
 
-  if((compte % 3) == 0){
-    double *tmp;
-    tmp = malloc((N) * sizeof(double));
-    
-    if (xk2 == NULL) {
-      printf("\n\nPB malloc\n\n");
-      exit(2);
-    }
+  if((compte % 10) == 0) {
 
-      for(int i = 0; i<N; i++){
-        tmp[i] = xk2[i];
-      }
-
-
-    Aitken(N, x, xk1, tmp, xk2);
+    Aitken(N, x, xk1, xk2);
 
   }
 

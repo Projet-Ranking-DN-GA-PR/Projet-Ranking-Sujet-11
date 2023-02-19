@@ -109,7 +109,7 @@ int main(int argc, char *argv[]) {
   calcul(alpha, nbsom, xk1, xk2, Sommets, vecteurf); // init xk2 = x2
 
   double diffnorme = 1.0; // diff entre étape k et étape k+1, indique si on a converger ou non.
-  int compteur = 0; //nb d'itération de l'algo des puissance avant convergence.
+  int compteur = 2; //nb d'itération de l'algo des puissance avant convergence.
 
 
   //algo des puissance avec/sans la précision de Google, jusq'à atteindre epsilon (convergence).
@@ -120,7 +120,7 @@ int main(int argc, char *argv[]) {
   printf("\nvaleur d'alpha : %.2lf\n",alpha);
   
 
-  while ( diffnorme > EPSILON ){
+  while ( diffnorme > EPSILON  ){
     
     diffnorme = 0.0;
 
@@ -139,13 +139,22 @@ int main(int argc, char *argv[]) {
     //calcul(alpha, nbsom, xk1, xk2, Sommets, vecteurf);   //calcul principale avec la précision Google.
 
 
-    calculAitken(alpha, nbsom, x, xk1, xk2, Sommets, compteur, vecteurf); //calcul de pageRank avec l'approximation de Aikten.
+    //calculAitken(alpha, nbsom, x, xk1, xk2, Sommets, compteur, vecteurf); //calcul de pageRank avec l'approximation de Aikten.
 
-    //affiche_vecteur(nbsom, nx); //affiche le vecteur résultat
-    testNorme(xk2,nbsom); //vérifie que la norme 1 du vecteur obtenu est bien égale à 1.
-    
+    calcul(alpha, nbsom, xk1, xk2, Sommets, vecteurf);
+
+    if( (compteur%3) == 0 ) {
+
+      Aitken(nbsom, x, xk1, xk2);
+
+    }
+
     diffnorme = diff_norme(nbsom, xk1, xk2); //calcul la norme de la différence en valeur absolu de nx - x
-    //printf("\n\nvaleur norme : %.12lf",diffnorme);
+
+    //affiche_vecteur(nbsom, xk2); //affiche le vecteur résultat
+    //testNorme(xk2,nbsom); //vérifie que la norme 1 du vecteur obtenu est bien égale à 1.
+    
+    printf("\n\nvaleur norme : %.12lf",diffnorme);
 
     compteur++;
   }

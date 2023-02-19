@@ -10,7 +10,7 @@ double scalaire_s(int taille_vec, double x[], double ftrans[]);
 
 void calcul(double alpha, int N, double x[], double nx[], ARC *S[], double f[]);
 
-void Aitken( int N, double xk[], double xk1[], double xk2[], double res[]);
+void Aitken( int N, double xk[], double xk1[], double xk2[]);
 
 void calculAitken(double alpha, int N, double x[], double xk1[], double xk2[], ARC *S[], int compte, double f[]);
 
