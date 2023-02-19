@@ -1,10 +1,10 @@
 CC = gcc
-CFLAGS = -c -Wall
+CFLAGS = -c -Wall -g
 OBJS = main.o lecture.o calcul.o
 
 .PHONY: test
 test: clean main
-	./main ../matriceB.txt
+	./main ../wb-cs-stanford.txt
 	
 main: $(OBJS)
 	$(CC) -o $@ $(OBJS)

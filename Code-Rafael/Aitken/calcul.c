@@ -7,12 +7,12 @@
 /*
 fonction qui effectue le produit à gauche du vecteur ligne x par la matrice S
 */
-void produit_vecteur_matrice(double x[], ARC *S[], int nbsom, double res[]) {
+void produit_vecteur_matrice(double x[], ARC *S, int nbsom, double res[]) {
 
   for (int i = 0; i < nbsom; i++) {
 
     ARC *a;
-    a = S[i]; //récupére le 1er sommet de la liste chainée de la colonne i
+    a = &S[i]; //récupére le 1er sommet de la liste chainée de la colonne i
 
     double som = 0.0;
       
@@ -92,7 +92,7 @@ double scalaire_s(int taille_vec, double x[], double ftrans[]){
 efectue le calcul suivant :
 nx = alpha * x*P + alpha*s*e/N + (1-alpha)*e/N avec x vecteur résultat à l'étape k et nx vecteur résultat à l'étape k+1
 */
-void calcul(double alpha, int N, double x[], double nx[], ARC *S[], double f[]){
+void calcul(double alpha, int N, double x[], double nx[], ARC *S, double f[]){
 
 
   double s = 0.0;
@@ -102,7 +102,13 @@ void calcul(double alpha, int N, double x[], double nx[], ARC *S[], double f[]){
 
   sprime = (s*alpha+(1-alpha))/N; //calcul s' à partir de s 
 
-  double produit[N];  
+  double *produit;
+  produit = malloc(N * sizeof(double));
+    
+  if (produit == NULL) {
+    printf("\n\nPB malloc\n\n");
+    exit(2);
+  }   
 
   produit_vecteur_matrice(x, S, N, produit);  //produit = x*P (P est ici S : matrice d'adjacence du graphe).
 
@@ -111,6 +117,8 @@ void calcul(double alpha, int N, double x[], double nx[], ARC *S[], double f[]){
     nx[i] = (alpha * produit[i]) + sprime; //fait la dernière étape du calcul avec la précision Google, i.e : ajout du surfer aléatoire (rend la matrice irréductible).
 
   }
+
+  testNorme(nx,N);
 
 }
 
@@ -121,16 +129,14 @@ void Aitken( int N, double xk[], double xk1[], double xk2[]){
     double g;
     double h;
 
-    g = (xk1[i] - xk[i])*(xk1[i] - xk[i]);
+    g = (xk1[i] - xk[i])*(xk2[i] - xk1[i]);
     h = xk2[i] - 2*xk1[i] + xk[i];
 
-    if(h != 0 /*&& xk2[i] < (g/h)*/) {xk2[i] = xk2[i] - (g/h);
-    //printf("\nFLAG valeur xk2 : %lf",xk2[i]);
-    }
+    if(h != 0 /*&& xk2[i] > (g/h)*/) {xk2[i] = xk[i] - (g/h);}
 
     //xk2[i] = xk2[i] - (g/h);
 
-    //if(xk2[i] < 0){xk2[i] = 0;}
+    if(xk2[i] < 0){xk2[i] = 0;}
     
   }
 
@@ -142,16 +148,16 @@ void Aitken( int N, double xk[], double xk1[], double xk2[]){
 
 }
 
-void calculAitken(double alpha, int N, double x[], double xk1[], double xk2[], ARC *S[], int compte, double f[]){
+void Aitken2( int N, double xk[], double xk1[], double xk2[]) {
 
+  for (int i = 0; i < N; i++){
 
-  calcul(alpha, N, xk1, xk2, S, f);
-
-  if((compte % 10) == 0) {
-
-    Aitken(N, x, xk1, xk2);
+    if (xk1[i] > xk[i]) {xk2[i] = xk2[i] - xk[i] + xk1[i];}
 
   }
+
+  testNorme(xk2, N);
+
 
 }
 
@@ -169,5 +175,5 @@ void testNorme(double x[], int N){
     ress+=x[i];
   }
 
-  printf("\nNorme du vecteur xk : %.12lf          Seconde norme : %.12lf",res,ress);
+  //printf("\nNorme du vecteur xk : %.12lf          Seconde norme : %.12lf",res,ress);
 }

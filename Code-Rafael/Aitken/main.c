@@ -4,7 +4,7 @@
 #include "calcul.h"
 
 #define EPSILON  0.00000001
-#define alpha 0.85
+#define alpha 0.9
 
 int main(int argc, char *argv[]) {
 
@@ -27,22 +27,25 @@ int main(int argc, char *argv[]) {
 
   printf("\n\n\n----------Lecture et stockage de la Matrice en cours----------\n\n\n");
 
-  double vecteurf[nbsom];
+  //double vecteurf[nbsom];
+  double *vecteurf;
+  vecteurf = malloc((nbsom) * sizeof(double));
+    
+    if (vecteurf == NULL) {
+      printf("\n\nPB malloc\n\n");
+      exit(2);
+    }
 
 
   //créer le tableau des listes chainées de chaque sommet
   //un noeud représente un arc et contient le pere dudit sommet, ainsi que le poid de l'arc
-  ARC *Sommets[nbsom];
+  ARC *Sommets;
 
-  for (int i = 0; i < nbsom; i++) {
-
-    Sommets[i] = malloc((12) * sizeof(ARC));
-    
-    if (Sommets[i] == NULL) {
-      printf("\n\nPB malloc %d\n\n", i);
-      exit(2);
-    }
-
+  Sommets = malloc( nbsom * sizeof(ARC));
+  
+  if (Sommets == NULL) {
+    printf("\n\nPB malloc\n\n");
+    exit(2);
   }
 
   
@@ -143,9 +146,10 @@ int main(int argc, char *argv[]) {
 
     calcul(alpha, nbsom, xk1, xk2, Sommets, vecteurf);
 
-    if( (compteur%3) == 0 ) {
+    if( (compteur%20) == 0 && compteur >49) {
 
-      Aitken(nbsom, x, xk1, xk2);
+      Aitken2(nbsom, x, xk1, xk2);
+      //printf("\nFLAGFLAGFLAG\n");
 
     }
 

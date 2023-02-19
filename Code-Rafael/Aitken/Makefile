@@ -4,7 +4,7 @@ OBJS = main.o lecture.o calcul.o
 
 .PHONY: test
 test: clean main
-	./main ../matriceB.txt
+	./main ../Stanford.txt
 	
 main: $(OBJS)
 	$(CC) -o $@ $(OBJS)

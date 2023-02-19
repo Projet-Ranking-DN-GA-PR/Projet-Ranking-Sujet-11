@@ -35,7 +35,7 @@ int nb_arc(int argc, char *argv[], FILE *f) {
   return nbarc;
 }
 
-void stocker_arc(int ligne, FILE *f, ARC *S[],int *testfils){
+void stocker_arc(int ligne, FILE *f, ARC *S,int *testfils){
 
   ARC *arc;
 
@@ -69,23 +69,23 @@ void stocker_arc(int ligne, FILE *f, ARC *S[],int *testfils){
 
   arc->poid = poid;
   
-  if (S[fils-1]->pere == 0){
+  if (S[fils-1].pere == 0){
 
-    S[fils-1] = arc;
+    S[fils-1] = *arc;
     //printf("FLAG 11");
   }
     
   else{
     
-    if (S[fils-1]->suivant == NULL){
+    if (S[fils-1].suivant == NULL){
 
-      S[fils-1]->suivant = arc;
+      S[fils-1].suivant = arc;
       //printf("FLAG 22");
     }
       
     else{
-      arc->suivant = S[fils-1]->suivant;
-      S[fils-1]->suivant = arc;
+      arc->suivant = S[fils-1].suivant;
+      S[fils-1].suivant = arc;
      // printf("FLAG 33");
     }
     
@@ -95,7 +95,7 @@ void stocker_arc(int ligne, FILE *f, ARC *S[],int *testfils){
   
 }
 
-void stocker_ligne(FILE *f, ARC *S[], double vecteurf[]){
+void stocker_ligne(FILE *f, ARC *S, double vecteurf[]){
   int ligne = 0;
   int deg = 0;
   int error;
@@ -132,12 +132,12 @@ void stocker_ligne(FILE *f, ARC *S[], double vecteurf[]){
   
 }
 
-void affichage_ArcsEntrants(int indice, ARC *S[]){
+void affichage_ArcsEntrants(int indice, ARC *S){
 
   int i = 1;
   ARC *a;
 
-  a=S[indice-1];
+  a= &S[indice-1];
 
   printf("\nSommet numéro : %d\n",indice);
   

@@ -7,12 +7,12 @@
 /*
 fonction qui effectue le produit à gauche du vecteur ligne x par la matrice S
 */
-void produit_vecteur_matrice(double x[], ARC *S[], int nbsom, double res[]) {
+void produit_vecteur_matrice(double x[], ARC *S, int nbsom, double res[]) {
 
   for (int i = 0; i < nbsom; i++) {
 
     ARC *a;
-    a = S[i]; //récupére le 1er sommet de la liste chainée de la colonne i
+    a = &S[i]; //récupére le 1er sommet de la liste chainée de la colonne i
 
     double som = 0.0;
       
@@ -92,13 +92,19 @@ double scalaire_s(int taille_vec, double x[], double ftrans[]){
 efectue le calcul suivant :
 nx = alpha * x*P + alpha*s*e/N + (1-alpha)*e/N avec x vecteur résultat à l'étape k et nx vecteur résultat à l'étape k+1
 */
-void calcul(double alpha, int N, double x[], double s, double nx[], ARC *S[]){
+void calcul(double alpha, int N, double x[], double s, double nx[], ARC *S){
 
   double sprime = 0.0;
 
   sprime = (s*alpha+(1-alpha))/N; //calcul s' à partir de s 
 
-  double produit[N];  
+  double *produit;
+    produit = malloc(N * sizeof(double));
+      
+    if (produit == NULL) {
+      printf("\n\nPB malloc\n\n");
+      exit(2);
+    } 
 
   produit_vecteur_matrice(x, S, N, produit);  //produit = x*P (P est ici S : matrice d'adjacence du graphe).
 
@@ -107,5 +113,7 @@ void calcul(double alpha, int N, double x[], double s, double nx[], ARC *S[]){
     nx[i] = (alpha * produit[i]) + sprime; //fait la dernière étape du calcul avec la précision Google, i.e : ajout du surfer aléatoire (rend la matrice irréductible).
 
   }
+
+  free(produit);
 
 }
