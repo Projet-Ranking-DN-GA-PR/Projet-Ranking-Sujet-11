@@ -3,8 +3,8 @@
 
 #include "calcul.h"
 
-double EPSILON = 0.00000001;
-double alpha = 0.85;
+double EPSILON;
+double alpha;
 
 int main(int argc, char *argv[]) {
 
@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
 
   FILE *f;
   f = fopen(argv[1], "r");
-  //double alphatab[6] = { 0.5 , 0.7 , 0.85 , 0.9 , 0.99, 0.999 };
+  double alphatab[6] = { 0.5 , 0.7 , 0.85 , 0.9 , 0.99, 0.999 };
 
   int nbsom = 0;  //nombre de sommet
   int nbarc = 0;  //nombre d'arc
@@ -73,14 +73,14 @@ int main(int argc, char *argv[]) {
 
 //double alpha = 0.0;
 
-//  for(int j = 0; j < 6; j++){
+  for(int j = 2; j < 6; j++){
 
-  //  alpha = alphatab[j];
-  //  EPSILON = 0.01;
+    alpha = alphatab[j];
+    EPSILON = 0.01;
 
-  //  for(int i = 0; i < 7 ; i++) {
+    for(int i = 0; i < 7 ; i++) {
 
-  //    EPSILON = EPSILON/10;
+      EPSILON = EPSILON/10;
 
       clock_t clock_calc = clock();
 
@@ -157,8 +157,8 @@ int main(int argc, char *argv[]) {
 
       free(x);
       free(nx);
-    //}
-  //}
+    }
+  }
 
   //affiche_vecteur(nbsom, nx); //affiche le résultat après convergence 
 

@@ -119,6 +119,7 @@ void calcul(double alpha, int N, double x[], double nx[], ARC *S, double f[]){
   }
 
   testNorme(nx,N);
+  free(produit);
 
 }
 
