@@ -3,7 +3,7 @@
 
 #include "calcul.h"
 
-#define EPSILON  0.0000001
+#define EPSILON  0.00000001
 #define alpha 0.99
 
 int main(int argc, char *argv[]) {
@@ -89,7 +89,7 @@ int main(int argc, char *argv[]) {
     exit(2);
   }
 
-  for(int i = 0;i<2;i++){
+  for(int i = 1;i<2;i++){
 
     clock_t clock_calc = clock();
 
@@ -143,10 +143,10 @@ int main(int argc, char *argv[]) {
     printf("\nprécision Epsilon : %.2e", EPSILON);
     printf("\nvaleur d'alpha : %.2lf\n",alpha);
     
-
+    int cptAitken = 0;
     while ( diffnorme > EPSILON  ){
       
-      diffnorme = 0.0;
+      //diffnorme = 0.0;
 
       for (int i = 0; i < nbsom ; i++){
 
@@ -167,9 +167,10 @@ int main(int argc, char *argv[]) {
 
       calcul(alpha, nbsom, xk1, xk2, Sommets, vecteurf);
 
-      if( (compteur%100) == 0 && compteur >49 && i == 1) {
-
-        Aitken2(nbsom, x, xk1, xk2);
+      if( (compteur%100) == 0 && compteur >19 && i == 1) {
+        cptAitken++;
+        Aitken(nbsom, x, xk1, xk2);
+        //Aitken2(nbsom, x, xk1, xk2);
         //printf("\nFLAGFLAGFLAG\n");
 
       }
@@ -179,7 +180,7 @@ int main(int argc, char *argv[]) {
       //affiche_vecteur(nbsom, xk2); //affiche le vecteur résultat
       //testNorme(xk2,nbsom); //vérifie que la norme 1 du vecteur obtenu est bien égale à 1.
       
-      //printf("\n\nvaleur norme : %.12lf nb tour : %d",diffnorme, compteur);
+      //if (i == 1){printf("\n\nvaleur norme : %.12lf nb tour : %d",diffnorme, compteur);}
 
       compteur++;
     }
@@ -187,6 +188,7 @@ int main(int argc, char *argv[]) {
     printf("\n\n\nCalcul de convergence de la Matrice terminé\n\n");
 
     printf("\nnombre de tour de boucle avant convergence : %d\n\n",compteur);
+    printf("\nNombre d'appel à Aitken : %d\n\n",cptAitken);
 
     printf("durée : ");
     affiche_time(clock_calc);

@@ -4,6 +4,8 @@
 
 #include "calcul.h"
 
+double previouslambda2 = 0.0;
+
 /*
 fonction qui effectue le produit à gauche du vecteur ligne x par la matrice S
 */
@@ -125,26 +127,50 @@ void calcul(double alpha, int N, double x[], double nx[], ARC *S, double f[]){
 
 void Aitken( int N, double xk[], double xk1[], double xk2[]){
 
-  for (int i = 0; i<N ; i++){
+
+  
+  double lambda2 = 0.0;
+
+  double *a;
+  a = malloc((N) * sizeof(double));
     
-    double g;
-    double h;
+  if (a == NULL) {
+    printf("\n\nPB malloc\n\n");
+    exit(2);
+  }
 
-    g = (xk1[i] - xk[i])*(xk2[i] - xk1[i]);
-    h = xk2[i] - 2*xk1[i] + xk[i];
+    
+  for (int i = 0; i < N; i++){
 
-    if(h != 0 /*&& xk2[i] > (g/h)*/) {xk2[i] = xk[i] - (g/h);}
+    a[i] = 0.0;
+    double b = 0.0;
+    
+    a[i] = xk[i] - xk1[i];
+    b = xk1[i] - xk2[i];
 
-    //xk2[i] = xk2[i] - (g/h);
-
-    if(xk2[i] < 0){xk2[i] = 0;}
+    if(a[i] == 0 || b == 0){lambda2 += previouslambda2/(i+1);}
+    else{lambda2 += b/a[i];}
     
   }
 
-  /*for(int i = 0; i<N; i++){
-    if(xk2[i] < 0){xk2[i] = -xk2[i];}
-  }*/
+  lambda2=lambda2/N;
+  previouslambda2 = lambda2;
+  printf("\nValeur de lambda2 trouvée : %.12lf\n",lambda2);
+  
+  for(int i = 0; i < N; i++){
 
+    double u2lambda2k = 0.0;
+
+    u2lambda2k = a[i]/(1 - lambda2);
+    //if(u2lambda2k >= 1){printf("FLAGGY FLAGGY FLAG FLAG");}
+
+    xk2[i] = xk[i] - u2lambda2k;
+
+    
+
+  }
+  
+  
   testNorme(xk2, N);
 
 }
