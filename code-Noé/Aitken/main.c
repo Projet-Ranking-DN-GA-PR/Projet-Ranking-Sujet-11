@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include "lire_stocker.h"
 
-double EPSILON = 0.00000001;
-double alpha = 0.85;
+double EPSILON = 0.000000001;
+double alpha = 0.9;
 
 //Affichage
 void aff_vec(int nb_sommets, double newX[]){
@@ -47,12 +47,16 @@ int main(int argc, char *argv[]){
     //méthode puissance
 
     //variable
-    double x[nb_sommets];
-    double x1[nb_sommets];
-    double x2[nb_sommets];
-    double newX[nb_sommets];
-    double g[nb_sommets];
-    double h[nb_sommets]; 
+    double *x;
+    x = (double*)malloc(nb_sommets*sizeof(double));
+    double *newX;
+    newX = (double*)malloc(nb_sommets*sizeof(double));
+    double *x1;
+    x1 = (double*)malloc(nb_sommets*sizeof(double));
+    double *x2;
+    x2 = (double*)malloc(nb_sommets*sizeof(double));
+   // double g[nb_sommets];
+   // double h[nb_sommets]; 
     double inter = 0;
     ARC *A;
     double s=0;
@@ -64,15 +68,14 @@ int main(int argc, char *argv[]){
         x1[j] = 0.0;
         x2[j] = 0.0;
         newX[j] = 0.0;
-        g[j] = 0.0;
-        h[j] = 0.0;
+       // g[j] = 0.0;
+       // h[j] = 0.0;
     }
 
-    double norme;
+    double norme=1.0;
     double c = 0.0;
     int cpt = 0;
     do{
-        norme = 0.0;
         //p = multi_VecMat(Tsommets,nb_sommets,f);
         s=0;
         s1=0;
@@ -93,14 +96,14 @@ int main(int argc, char *argv[]){
         }
 
         //Aitken
-        if((cpt+1)%2==0){
-
+        if(((cpt+1)%60==0)&&(norme>EPSILON*100)){
+            printf("Aitken\n");
             //calcul de x1
             s=0;
             s1=0;
             for(int i=0;i<nb_sommets;i++){
                 if(f[i]==1){
-                    s+=x[i]*f[i];
+                    s+=newX[i]*f[i];
                 }
             }
             s1=(s*alpha+(1-alpha))/nb_sommets;
@@ -108,10 +111,15 @@ int main(int argc, char *argv[]){
                 A = &Tsommets[i];
                 inter = 0;
                 while(A!=NULL){
-                    inter += A->weight*x[A->pred-1];
+                    inter += A->weight*newX[A->pred-1];
                     A = A->suiv;
                 }
                 x1[i] = alpha*inter+s1;
+            }
+
+            //calcul du nouveau x1
+            for(int i=0;i<nb_sommets;i++){
+                x1[i]=x1[i]-(newX[i]-x1[i]); 
             }
 
             //calcul de x2
@@ -132,20 +140,20 @@ int main(int argc, char *argv[]){
                 }
                 x2[i] = alpha*inter+s1;
             }
-//printf("x1\n"); aff_vec(nb_sommets, x1);
-//printf("x\n"); aff_vec(nb_sommets, x);
-            for(int i=0;i<nb_sommets;i++){
+            
+            /*for(int i=0;i<nb_sommets;i++){
                 g[i]= (x1[i]-x[i])*(x1[i]-x[i]);
                 h[i]= x2[i]-(2*x1[i])+x[i];
                 newX[i]= x[i]-(g[i]/h[i]);
-                //printf("rapport %f et i %d et newx %f\n",g[i]/h[i],i, newX[i]);
+            }*/
+            for(int i=0;i<nb_sommets;i++){
+                x[i]=x1[i];
+                newX[i]=x2[i];
             }
-           //printf("g\n"); aff_vec(nb_sommets, g);    
-           //printf("h\n"); aff_vec(nb_sommets, h);
-           //printf("newx\n"); aff_vec(nb_sommets, newX);
         }
 
-        //printf("newx\n");aff_vec(nb_sommets, newX);
+        //calcul de la norme
+        norme = 0.0;
         for(int i=0;i<nb_sommets;i++){
             if((newX[i]-x[i])>0){
                 c = newX[i]-x[i];}
@@ -153,10 +161,11 @@ int main(int argc, char *argv[]){
         norme+=c;
         x[i] = newX[i];
         }
-        printf("norme : %lf\n",norme);
-        cpt++;
+        //printf("norme : %lf\n",norme);
+        cpt++;//indentation 
     }while(norme>EPSILON);
     printf("Nb itération : %d\n",cpt);
     //aff_vec(nb_sommets, x);
+    free(x); free(newX); free(x1); free(x2);
     exit(0);
 }
