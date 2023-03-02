@@ -155,16 +155,19 @@ void Aitken( int N, double xk[], double xk1[], double xk2[]){
 
   lambda2=lambda2/N;
   previouslambda2 = lambda2;
-  printf("\nValeur de lambda2 trouvée : %.12lf\n",lambda2);
+  //printf("\nValeur de lambda2 trouvée : %.12lf\n",lambda2);
   
-  for(int i = 0; i < N; i++){
+  for(int i = 0; i < N; i++) {
 
     double u2lambda2k = 0.0;
 
-    u2lambda2k = a[i]/(1 - lambda2);
-    //if(u2lambda2k >= 1){printf("FLAGGY FLAGGY FLAG FLAG");}
+    //u2lambda2k = a[i]/(1 - lambda2);
+    //if(u2lambda2k >= 1){printf("FLAGGY FLAGGY FLAG FLAG %lf",a[i]);}
 
-    xk2[i] = xk[i] - u2lambda2k;
+    //if(u2lambda2k < xk[i]){
+      xk2[i] = xk2[i] - xk[i]*lambda2;
+      //printf("FLAGGY FLAGGY FLAG FLAG");
+      //}
 
     
 

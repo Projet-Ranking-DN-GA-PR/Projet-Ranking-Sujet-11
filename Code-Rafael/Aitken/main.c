@@ -4,7 +4,7 @@
 #include "calcul.h"
 
 #define EPSILON  0.00000001
-#define alpha 0.99
+#define alpha 0.85
 
 int main(int argc, char *argv[]) {
 
@@ -89,7 +89,7 @@ int main(int argc, char *argv[]) {
     exit(2);
   }
 
-  for(int i = 1;i<2;i++){
+  for(int i = 0;i<2;i++){
 
     clock_t clock_calc = clock();
 
@@ -167,7 +167,7 @@ int main(int argc, char *argv[]) {
 
       calcul(alpha, nbsom, xk1, xk2, Sommets, vecteurf);
 
-      if( (compteur%100) == 0 && compteur >19 && i == 1) {
+      if( (compteur%20) == 0 && compteur >19 && i == 1) {
         cptAitken++;
         Aitken(nbsom, x, xk1, xk2);
         //Aitken2(nbsom, x, xk1, xk2);
@@ -180,7 +180,7 @@ int main(int argc, char *argv[]) {
       //affiche_vecteur(nbsom, xk2); //affiche le vecteur résultat
       //testNorme(xk2,nbsom); //vérifie que la norme 1 du vecteur obtenu est bien égale à 1.
       
-      //if (i == 1){printf("\n\nvaleur norme : %.12lf nb tour : %d",diffnorme, compteur);}
+      if (i == 1){printf("\n\nvaleur norme : %.12lf nb tour : %d",diffnorme, compteur);}
 
       compteur++;
     }
