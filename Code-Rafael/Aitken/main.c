@@ -4,7 +4,7 @@
 #include "calcul.h"
 
 #define EPSILON  0.00000001
-#define alpha 0.85
+#define alpha 0.99
 
 int main(int argc, char *argv[]) {
 
@@ -89,6 +89,8 @@ int main(int argc, char *argv[]) {
     exit(2);
   }
 
+  
+
   for(int i = 0;i<2;i++){
 
     clock_t clock_calc = clock();
@@ -131,7 +133,7 @@ int main(int argc, char *argv[]) {
 
     calcul(alpha, nbsom, xk1, xk2, Sommets, vecteurf); // init xk2 = x2
 
-    double diffnorme = 1.0; // diff entre étape k et étape k+1, indique si on a converger ou non.
+    
     int compteur = 2; //nb d'itération de l'algo des puissance avant convergence.
 
 
@@ -144,6 +146,9 @@ int main(int argc, char *argv[]) {
     printf("\nvaleur d'alpha : %.2lf\n",alpha);
     
     int cptAitken = 0;
+
+    double diffnorme = 1.0; // diff entre étape k et étape k+1, indique si on a converger ou non.
+
     while ( diffnorme > EPSILON  ){
       
       //diffnorme = 0.0;
@@ -152,6 +157,7 @@ int main(int argc, char *argv[]) {
 
         x[i] = xk1[i];
         xk1[i] = xk2[i];
+        xk2[i] = 0.0;
 
       }
 
@@ -167,7 +173,7 @@ int main(int argc, char *argv[]) {
 
       calcul(alpha, nbsom, xk1, xk2, Sommets, vecteurf);
 
-      if( (compteur%20) == 0 && compteur >19 && i == 1) {
+      if( (compteur%100) == 0 && compteur > 19 && i == 1 && diffnorme > EPSILON*1000) {
         cptAitken++;
         Aitken(nbsom, x, xk1, xk2);
         //Aitken2(nbsom, x, xk1, xk2);
@@ -180,7 +186,7 @@ int main(int argc, char *argv[]) {
       //affiche_vecteur(nbsom, xk2); //affiche le vecteur résultat
       //testNorme(xk2,nbsom); //vérifie que la norme 1 du vecteur obtenu est bien égale à 1.
       
-      if (i == 1){printf("\n\nvaleur norme : %.12lf nb tour : %d",diffnorme, compteur);}
+      //if (i == 1){printf("\n\nvaleur norme : %.12lf nb tour : %d",diffnorme, compteur);}
 
       compteur++;
     }

@@ -129,7 +129,7 @@ void Aitken( int N, double xk[], double xk1[], double xk2[]){
 
 
   
-  double lambda2 = 0.0;
+  
 
   double *a;
   a = malloc((N) * sizeof(double));
@@ -144,37 +144,47 @@ void Aitken( int N, double xk[], double xk1[], double xk2[]){
 
     a[i] = 0.0;
     double b = 0.0;
+    double lambda2 = 0.0;
     
     a[i] = xk[i] - xk1[i];
     b = xk1[i] - xk2[i];
 
-    if(a[i] == 0 || b == 0){lambda2 += previouslambda2/(i+1);}
-    else{lambda2 += b/a[i];}
+    //if(a[i] == 0 || b == 0){lambda2 += previouslambda2/(i+1);}
+    //else{lambda2 += b/a[i];}
     
-  }
+    if(a[i] != 0){
+      lambda2=b/a[i];
+    }
+    //lambda2=b/a[i];
 
-  lambda2=lambda2/N;
-  previouslambda2 = lambda2;
-  //printf("\nValeur de lambda2 trouvée : %.12lf\n",lambda2);
-  
-  for(int i = 0; i < N; i++) {
+
+    //previouslambda2 = lambda2;
+    //printf("\nValeur de lambda2 trouvée : %.12lf\n",lambda2);
+    if (lambda2 == 1) printf("FLAGGY FLAGGY FLAG FLAG");
+
 
     double u2lambda2k = 0.0;
 
-    //u2lambda2k = a[i]/(1 - lambda2);
-    //if(u2lambda2k >= 1){printf("FLAGGY FLAGGY FLAG FLAG %lf",a[i]);}
-
-    //if(u2lambda2k < xk[i]){
-      xk2[i] = xk2[i] - xk[i]*lambda2;
-      //printf("FLAGGY FLAGGY FLAG FLAG");
-      //}
-
+    u2lambda2k = a[i]/(1 - lambda2);
+    if (u2lambda2k < 0) u2lambda2k = 0;
     
+    //printf("\t %.12lf",u2lambda2k);
+
+    if(u2lambda2k < xk[i]){  
+      //printf("FLAGGY FLAGGY FLAG FLAG");
+      //printf("\t %.12lf",u2lambda2k);
+      xk2[i] = xk[i] - u2lambda2k;
+    }
+
+    //xk2[i] = xk[i] - u2lambda2k;
+
+    //xk2[i] = xk2[i] - xk2[i]*lambda2;
 
   }
   
   
   testNorme(xk2, N);
+  free(a);
 
 }
 
