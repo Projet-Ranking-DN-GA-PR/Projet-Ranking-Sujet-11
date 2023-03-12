@@ -217,3 +217,56 @@ void testNorme(double x[], int N){
 
   //printf("\nNorme du vecteur xk : %.12lf          Seconde norme : %.12lf",res,ress);
 }
+
+void Aitken3( int N, double xk[], double xk1[], double xk2[], int k){
+
+
+  
+  
+
+  double *a;
+  a = malloc((N) * sizeof(double));
+    
+  if (a == NULL) {
+    printf("\n\nPB malloc\n\n");
+    exit(2);
+  }
+
+    double lambda2 = 0.0;
+    
+  for (int i = 0; i < N; i++) {
+
+    a[i] = 0.0;
+    double b = 0.0;
+    
+    a[i] = xk[i] - xk1[i];
+    b = xk1[i] - xk2[i];
+
+    if(a[i] == 0 || b == 0){lambda2 += previouslambda2/(i+1);}
+    else{lambda2 += b/a[i];}
+
+  }
+
+    lambda2 = lambda2 / N;
+    previouslambda2 = lambda2;
+    //printf("\nValeur de lambda2 trouvée : %.12lf\n",lambda2);
+    //if (lambda2 < 0){lambda2 = -lambda2;}
+    //if (lambda2 >= 1) lambda2 = 0.999999999;
+
+    printf("\nValeur de lambda2 trouvée : %.12lf\n",lambda2);
+  for (int j = 1; j < 1; j++) {
+
+    //lambda2 = lambda2*lambda2;
+  
+  }
+
+  for (int i = 0; i < N; i++) {
+
+    xk2[i] = xk[i] - xk[i]*lambda2;
+  
+  }
+  
+  testNorme(xk2, N);
+  free(a);
+
+}

@@ -152,6 +152,8 @@ int main(int argc, char *argv[]) {
     while ( diffnorme > EPSILON  ){
       
       //diffnorme = 0.0;
+      
+
 
       for (int i = 0; i < nbsom ; i++){
 
@@ -170,13 +172,14 @@ int main(int argc, char *argv[]) {
 
 
       //calculAitken(alpha, nbsom, x, xk1, xk2, Sommets, compteur, vecteurf); //calcul de pageRank avec l'approximation de Aikten.
-
+      
       calcul(alpha, nbsom, xk1, xk2, Sommets, vecteurf);
 
-      if( (compteur%100) == 0 && compteur > 19 && i == 1 && diffnorme > EPSILON*1000) {
+      if( (compteur%100) == 0 && compteur > 19 && i == 1 && diffnorme > EPSILON*1) {
         cptAitken++;
-        Aitken(nbsom, x, xk1, xk2);
+        //Aitken(nbsom, x, xk1, xk2);
         //Aitken2(nbsom, x, xk1, xk2);
+        Aitken3(nbsom, x, xk1, xk2, compteur);
         //printf("\nFLAGFLAGFLAG\n");
 
       }
