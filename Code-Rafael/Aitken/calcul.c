@@ -206,6 +206,7 @@ void testNorme(double x[], int N){
   double res = 0.0;
 
   for (int i = 0; i<N;i++){
+    //if(x[i] < 0){x[i] = -x[i];}
     res+=x[i];
   }
 
@@ -236,14 +237,14 @@ void Aitken3( int N, double xk[], double xk1[], double xk2[], int k){
     
   for (int i = 0; i < N; i++) {
 
-    a[i] = 0.0;
+    double aprime = 0.0;
     double b = 0.0;
     
-    a[i] = xk[i] - xk1[i];
+    aprime = xk[i] - xk1[i];
     b = xk1[i] - xk2[i];
 
-    if(a[i] == 0 || b == 0){lambda2 += previouslambda2/(i+1);}
-    else{lambda2 += b/a[i];}
+    if(aprime == 0 || b == 0){lambda2 += previouslambda2;}
+    else{lambda2 += b/aprime;}
 
   }
 
@@ -254,19 +255,37 @@ void Aitken3( int N, double xk[], double xk1[], double xk2[], int k){
     //if (lambda2 >= 1) lambda2 = 0.999999999;
 
     printf("\nValeur de lambda2 trouvée : %.12lf\n",lambda2);
-  for (int j = 1; j < 1; j++) {
+    if (lambda2 < 0){lambda2 = 0;}
 
-    //lambda2 = lambda2*lambda2;
+    double lambda2k = lambda2;
+    
+  for (int j = 1; j < k+2; j++) {
+
+    lambda2k = lambda2k*lambda2;
   
   }
+
+  //printf("\ndiff bt lambda2 et lambda2k : %3e %3e",lambda2, lambda2k);
+
+  double norme = 0.0;
+  norme = diff_norme(N, xk1, xk2);
+ // printf("\n valeur norme : %.12lf", norme);
 
   for (int i = 0; i < N; i++) {
 
-    xk2[i] = xk[i] - xk[i]*lambda2;
+    double tmp = 0.0;
+    tmp = xk2[i] - xk2[i]*lambda2k;
+    //printf("\ndiff bt lambda2 et lambda2k : %3e %3e %3e",xk2[i], xk2[i]*lambda2, tmp);
+    xk2[i] = tmp;
+    //xk2[i] = a[i];
+    //norme += xk2[i] - xk1[i];
+    printf("\n valeur xk[i] : %3e",xk2[i]);
   
   }
-  
-  testNorme(xk2, N);
+  //printf("\n valeur norme : %.12lf", norme/N);
+  //testNorme(xk2, N);
+  //norme = diff_norme(N, a, xk2);
+  //printf("\n valeur norme : %.12lf", norme);
   free(a);
 
 }

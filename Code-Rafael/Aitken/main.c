@@ -175,11 +175,13 @@ int main(int argc, char *argv[]) {
       
       calcul(alpha, nbsom, xk1, xk2, Sommets, vecteurf);
 
-      if( (compteur%100) == 0 && compteur > 19 && i == 1 && diffnorme > EPSILON*1) {
+      if( (compteur%100) == 0 && compteur > 19 && i == 1 && diffnorme > EPSILON*100) {
         cptAitken++;
-        //Aitken(nbsom, x, xk1, xk2);
+        //diffnorme = diff_norme(nbsom, xk1, xk2);
+        //printf("\n\nvaleur norme bf aitken : %.12lf nb tour : %d",diffnorme, compteur);
+        Aitken(nbsom, x, xk1, xk2);
         //Aitken2(nbsom, x, xk1, xk2);
-        Aitken3(nbsom, x, xk1, xk2, compteur);
+        //Aitken3(nbsom, x, xk1, xk2, compteur);
         //printf("\nFLAGFLAGFLAG\n");
 
       }
