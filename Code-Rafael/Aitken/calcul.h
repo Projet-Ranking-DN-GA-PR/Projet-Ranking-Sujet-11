@@ -12,8 +12,4 @@ void calcul(double alpha, int N, double x[], double nx[], ARC *S, double f[]);
 
 void Aitken( int N, double xk[], double xk1[], double xk2[]);
 
-void Aitken2( int N, double xk[], double xk1[], double xk2[]);
-
-void Aitken3( int N, double xk[], double xk1[], double xk2[], int k);
-
-void testNorme(double x[], int N);
+void Renormalisation(double x[], int N);

@@ -4,8 +4,6 @@
 
 #include "calcul.h"
 
-double previouslambda2 = 0.0;
-
 /*
 fonction qui effectue le produit à gauche du vecteur ligne x par la matrice S
 */
@@ -120,172 +118,88 @@ void calcul(double alpha, int N, double x[], double nx[], ARC *S, double f[]){
 
   }
 
-  testNorme(nx,N);
+  Renormalisation(nx,N);
   free(produit);
 
 }
 
+
+/*
+  Fonction qui calcul une approximation des termes Lambda2 puis u2*lambda^k
+  et soustrait cette dernière valeur au vecteur x^k, et l'applique au vecteur x^k.
+  Afin d'espérer une convergence plus rapide. 
+*/
 void Aitken( int N, double xk[], double xk1[], double xk2[]){
 
-
-  
-  
-
-  double *a;
-  a = malloc((N) * sizeof(double));
-    
-  if (a == NULL) {
-    printf("\n\nPB malloc\n\n");
-    exit(2);
-  }
-
-    
   for (int i = 0; i < N; i++){
 
-    a[i] = 0.0;
+    double a = 0.0;
     double b = 0.0;
     double lambda2 = 0.0;
     
-    a[i] = xk[i] - xk1[i];
+    a = xk[i] - xk1[i];
     b = xk1[i] - xk2[i];
-
-    //if(a[i] == 0 || b == 0){lambda2 += previouslambda2/(i+1);}
-    //else{lambda2 += b/a[i];}
     
-    if(a[i] != 0){
-      lambda2=b/a[i];
+    if(a != 0){
+
+      lambda2=b/a;
+
     }
-    //lambda2=b/a[i];
 
-
-    //previouslambda2 = lambda2;
     //printf("\nValeur de lambda2 trouvée : %.12lf\n",lambda2);
-    if (lambda2 == 1) printf("FLAGGY FLAGGY FLAG FLAG");
-
 
     double u2lambda2k = 0.0;
 
-    u2lambda2k = a[i]/(1 - lambda2);
-    if (u2lambda2k < 0) u2lambda2k = 0;
+    u2lambda2k = a/(1 - lambda2);
+
+
+    /*
+      J'ai relaché toute les conditions sur u2lambda2k (inférieur à 0 et inférieur à xk[i] )
+      car cela réduisait bcp le nombre d'itérations au prix d'une toute petite différence de précision :
+        on passe de 2.910e-07 à 7.509e-07 de différence avec PageRank classqiue tandis qu'on gagne environ 130 itérations.
+        (Paramètres : wb-cs-stanford / alpha = 0.99 / Epsilon = 10e-08.)
+      Peut-être que ces contraintes devraient être remises pour certains graphes et valeurs d'alpha et d'epsilon, à voir pendant l'expérimentation.
+    */
+
+    //if (u2lambda2k < 0) u2lambda2k = xk[i] + xk2[i];
+    //if (u2lambda2k < 0) u2lambda2k = 0;
     
     //printf("\t %.12lf",u2lambda2k);
 
-    if(u2lambda2k < xk[i]){  
-      //printf("FLAGGY FLAGGY FLAG FLAG");
-      //printf("\t %.12lf",u2lambda2k);
+    //if(u2lambda2k < xk[i]){  
+
       xk2[i] = xk[i] - u2lambda2k;
-    }
 
-    //xk2[i] = xk[i] - u2lambda2k;
-
-    //xk2[i] = xk2[i] - xk2[i]*lambda2;
+    //}
 
   }
-  
-  
-  testNorme(xk2, N);
-  free(a);
+
+  Renormalisation(xk2, N);
 
 }
 
-void Aitken2( int N, double xk[], double xk1[], double xk2[]) {
 
-  for (int i = 0; i < N; i++){
-
-    if (xk1[i] > xk[i]) {xk2[i] = xk2[i] - xk[i] + xk1[i];}
-
-  }
-
-  testNorme(xk2, N);
-
-
-}
-
-void testNorme(double x[], int N){
-
-  double res = 0.0;
-
-  for (int i = 0; i<N;i++){
-    //if(x[i] < 0){x[i] = -x[i];}
-    res+=x[i];
-  }
-
-  double ress = 0.0;
-  for (int i = 0; i<N;i++){
-    x[i]=x[i]/res;
-    ress+=x[i];
-  }
-
-  //printf("\nNorme du vecteur xk : %.12lf          Seconde norme : %.12lf",res,ress);
-}
-
-void Aitken3( int N, double xk[], double xk1[], double xk2[], int k){
-
-
-  
-  
-
-  double *a;
-  a = malloc((N) * sizeof(double));
-    
-  if (a == NULL) {
-    printf("\n\nPB malloc\n\n");
-    exit(2);
-  }
-
-    double lambda2 = 0.0;
-    
-  for (int i = 0; i < N; i++) {
-
-    double aprime = 0.0;
-    double b = 0.0;
-    
-    aprime = xk[i] - xk1[i];
-    b = xk1[i] - xk2[i];
-
-    if(aprime == 0 || b == 0){lambda2 += previouslambda2;}
-    else{lambda2 += b/aprime;}
-
-  }
-
-    lambda2 = lambda2 / N;
-    previouslambda2 = lambda2;
-    //printf("\nValeur de lambda2 trouvée : %.12lf\n",lambda2);
-    //if (lambda2 < 0){lambda2 = -lambda2;}
-    //if (lambda2 >= 1) lambda2 = 0.999999999;
-
-    printf("\nValeur de lambda2 trouvée : %.12lf\n",lambda2);
-    if (lambda2 < 0){lambda2 = 0;}
-
-    double lambda2k = lambda2;
-    
-  for (int j = 1; j < k+2; j++) {
-
-    lambda2k = lambda2k*lambda2;
-  
-  }
-
-  //printf("\ndiff bt lambda2 et lambda2k : %3e %3e",lambda2, lambda2k);
+/*
+  Fonction qui calcul la norme du vecteur x en entrée, puis divise tout ses valeurs par cette même norme, afin que la norme devienne 1.
+*/
+void Renormalisation(double x[], int N){
 
   double norme = 0.0;
-  norme = diff_norme(N, xk1, xk2);
- // printf("\n valeur norme : %.12lf", norme);
 
-  for (int i = 0; i < N; i++) {
+  for (int i = 0; i<N;i++){
 
-    double tmp = 0.0;
-    tmp = xk2[i] - xk2[i]*lambda2k;
-    //printf("\ndiff bt lambda2 et lambda2k : %3e %3e %3e",xk2[i], xk2[i]*lambda2, tmp);
-    xk2[i] = tmp;
-    //xk2[i] = a[i];
-    //norme += xk2[i] - xk1[i];
-    printf("\n valeur xk[i] : %3e",xk2[i]);
-  
+    norme+=x[i];
+
   }
-  //printf("\n valeur norme : %.12lf", norme/N);
-  //testNorme(xk2, N);
-  //norme = diff_norme(N, a, xk2);
-  //printf("\n valeur norme : %.12lf", norme);
-  free(a);
 
+  double newNorme = 0.0;
+
+  for (int i = 0; i<N;i++){
+
+    x[i]=x[i]/norme;
+    newNorme+=x[i];
+
+  }
+
+  //printf("\nNorme du vecteur xk : %.12lf \t Seconde norme : %.12lf",norme,newNorme);
 }
