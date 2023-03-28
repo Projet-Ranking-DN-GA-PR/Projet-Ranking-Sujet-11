@@ -153,6 +153,6 @@ void affiche_time(clock_t current_time) {
 
   clock_t test = clock();
   test = test - current_time;
-  printf("%ld min %ld sec %ld ms\n\n",test/(CLOCKS_PER_SEC*60), (test/CLOCKS_PER_SEC)%60, (test*1000/CLOCKS_PER_SEC)%1000 );
-
+  printf("%ld min %ld sec %ld ms\n",test/(CLOCKS_PER_SEC*60), (test/CLOCKS_PER_SEC)%60, (test*1000/CLOCKS_PER_SEC)%1000 );
+  printf("Finished in %ld µs\n\n",(test*1000000/CLOCKS_PER_SEC) );
 }
