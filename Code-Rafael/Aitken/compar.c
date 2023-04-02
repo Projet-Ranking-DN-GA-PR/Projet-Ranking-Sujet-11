@@ -90,7 +90,7 @@ int main(int argc, char *argv[]) {
 
   double ALPHATAB[6] = {0.5, 0.7, 0.85, 0.9, 0.99, 0.999}; //défini les différente valeurs d'alpha.
 
-  double FREQTAB[6] = {5, 10, 20, 20, 100, 500}; //défini la fréquence d'appel à Aitken en fonction de la valeur d'alpha.
+  double FREQTAB[6] = {5, 10, 20, 38, 450, 500}; //défini la fréquence d'appel à Aitken en fonction de la valeur d'alpha.
 
   for(int a = 0; a < 5; a++) { //boucle qui itère sur les valeurs d'alpha.
 
@@ -154,13 +154,13 @@ int main(int argc, char *argv[]) {
         int compteur = 2; //nb d'itération de l'algo des puissance avant convergence. Le conteur démarre à 2 du fait des initialisation de xk1 et xk2.
 
 
-        if (i == 0){printf("\n\n\n----------Calcul de convergence (PageRank) de la Matrice en cours----------\n\n\n");}
-        else{printf("\n\n\n----------Calcul de convergence (Aitken) de la Matrice en cours----------\n\n\n");}
+        //if (i == 0){printf("\n\n\n----------Calcul de convergence (PageRank) de la Matrice en cours----------\n\n\n");}
+        //else{printf("\n\n\n----------Calcul de convergence (Aitken) de la Matrice en cours----------\n\n\n");}
 
 
-        printf("\nprécision Epsilon : %.2e", EPSILON);
-        printf("\nvaleur d'alpha : %.3lf\n",alpha);
-        if(i == 1){printf("\nvaleur de la fréquence d'appel à Aitken : %d\n",freq);}
+        if (i == 0){printf("\nprécision Epsilon : %.2e", EPSILON);
+        printf("\nvaleur d'alpha : %.3lf\n",alpha);}
+        //if(i == 1){printf("valeur de la fréquence d'appel à Aitken : %d\n",freq);}
         
         int cptAitken = 0; //Nombre d'appel à l'approximation d'Aikten.
 
@@ -203,13 +203,13 @@ int main(int argc, char *argv[]) {
           compteur++;
         }
         
-        printf("\n\n\nCalcul de convergence de la Matrice terminé\n\n");
+        /*printf("\n\n\nCalcul de convergence de la Matrice terminé\n\n");
 
-        printf("\nnombre de tour de boucle avant convergence : %d\n\n",compteur);
-        printf("\nNombre d'appel à Aitken : %d\n\n",cptAitken);
+        printf("\nnombre de tour de boucle avant convergence : %d\n\n",compteur);*/
+        if(i==1)printf("Nombre d'appel à Aitken : %d\n",cptAitken);
 
-        printf("durée : ");
-        affiche_time(clock_calc);
+        /*printf("durée : ");
+        affiche_time(clock_calc);*/
 
         for(int j = 0; j<nbsom;j++){
 
@@ -226,12 +226,12 @@ int main(int argc, char *argv[]) {
       double NormeFinale = 0.0;
       NormeFinale = diff_norme(nbsom, resPageRank, resAitken);
 
-      printf("\n\nvaleur de la norme des différences entre PageRank et Aitken après convergence : %.3e",NormeFinale);
+      printf("valeur de la norme des différences entre PageRank et Aitken après convergence : %.3e\n\n",NormeFinale);
 
       
-      printf("\n\n\ndurée totale du programme (depuis le tout début) : ");
+      /*printf("\n\n\ndurée totale du programme (depuis le tout début) : ");
       affiche_time(clock_start);
-      printf("\n");
+      printf("\n");*/
 
       //affiche_vecteur(nbsom, resPageRank); //affiche le résultat après convergence de PageRank classique.
       //affiche_vecteur(nbsom, resAitken); //affiche le résultat après convergence de PageRank avec l'approximation d'Aitken.

@@ -90,7 +90,7 @@ int main(int argc, char *argv[]) {
 
   double ALPHATAB[6] = {0.5, 0.7, 0.85, 0.9, 0.99, 0.999}; //défini les différente valeurs d'alpha.
 
-  double FREQTAB[6] = {5, 10, 20,38, 250, 500}; //défini la fréquence d'appel à Aitken en fonction de la valeur d'alpha.
+  double FREQTAB[6] = {5, 10, 20, 38, 450, 500}; //défini la fréquence d'appel à Aitken en fonction de la valeur d'alpha.
 
   for(int a = 0; a < 5; a++) { //boucle qui itère sur les valeurs d'alpha.
 

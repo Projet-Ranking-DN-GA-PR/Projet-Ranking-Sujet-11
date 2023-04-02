@@ -149,8 +149,9 @@ void Aitken( int N, double xk[], double xk1[], double xk2[]){
     //printf("\nValeur de lambda2 trouvée : %.12lf\n",lambda2);
 
     double u2lambda2k = 0.0;
-
-    u2lambda2k = a/(1 - lambda2);
+    if(lambda2==1){
+      u2lambda2k = a;
+    }else u2lambda2k = a/(1 - lambda2);
 
 
     /*
